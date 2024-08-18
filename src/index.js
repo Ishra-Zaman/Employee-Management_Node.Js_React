@@ -1,17 +1,54 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import React from "react";
+import ReactDOM from "react-dom/client";
+import App from "./components/layout/App";
+import {createBrowserRouter, RouterProvider} from 'react-router-dom';
+import Designations from './pages/Designations';
+import AddDesignation from "./pages/AddDesignation";
+import EditDesignation from "./pages/EditDesignation";
+import Employees from './pages/Employees';
+import AddEmployee from "./pages/AddEmployee";
+import EditEmployee from "./pages/EditEmployee";
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+
+import "./styles.css";
+import "@radix-ui/themes/styles.css";
+
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <App />,
+    children: [
+      {
+        path: '/designations',
+        element: <Designations />
+      },
+      {
+        path: '/designations/add',
+        element: <AddDesignation />
+      },
+      {
+        path: '/designations/edit/:designationId',
+        element: <EditDesignation />
+      },
+      {
+        path: '/employees',
+        element: <Employees />
+      },
+      {
+        path: '/employees/add',
+        element: <AddEmployee />
+      },
+      {
+        path: '/employees/edit/:employeeId',
+        element: <EditEmployee />
+      }
+    ]
+  },
+]);
+
+const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <App />
+    <RouterProvider router={router} />
   </React.StrictMode>
 );
-
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
