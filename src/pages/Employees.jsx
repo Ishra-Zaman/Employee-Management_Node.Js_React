@@ -1,5 +1,7 @@
-import { Box, Heading } from "@radix-ui/themes";
+import { Box, Heading, Button } from "@radix-ui/themes";
 import React, { useState, useEffect } from "react";
+import {Link} from 'react-router-dom'
+import {PlusIcon} from '@radix-ui/react-icons'
 import axios from "axios";
 
 import EmployeeTable from "../components/employee/EmployeeTable";
@@ -22,6 +24,7 @@ const Employees = () => {
       <Heading size="6" mb="6" mt="4" align="center" color="violet">
         Employees
       </Heading>
+      <Link to="/employees/add"><Button variant="solid" mb="3"><PlusIcon /> Add Employee</Button></Link>
       <EmployeeTable employees={employees} />
     </Box>
   );
