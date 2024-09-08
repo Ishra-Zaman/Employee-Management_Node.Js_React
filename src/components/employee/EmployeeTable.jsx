@@ -28,7 +28,7 @@ const EmployeeTable = ({ employees }) => {
               <Table.Cell>{employees.phone}</Table.Cell>
               <Table.Cell>{employees.email_address}</Table.Cell>
               <Table.Cell>{employees.salary}</Table.Cell>
-              <Table.Cell>{employees.designation_id}</Table.Cell>
+              <Table.Cell>{employees.designation_name}</Table.Cell>
               <Table.Cell>
               <a href="/employees/edit/1">Edit</a>
               </Table.Cell>
