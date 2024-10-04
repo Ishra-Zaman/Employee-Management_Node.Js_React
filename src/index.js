@@ -9,9 +9,8 @@ import Employees from './pages/Employees';
 import AddEmployee from "./pages/AddEmployee";
 import EditEmployee from "./pages/EditEmployee";
 
-
-import "./styles.css";
-import "@radix-ui/themes/styles.css";
+import "./index.css"
+// import "./styles.css";
 
 const router = createBrowserRouter([
   {

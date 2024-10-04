@@ -1,41 +1,47 @@
-import React from 'react'
-import {Table, Badge, Spinner} from '@radix-ui/themes'
+import React from "react";
+import {
+  Table,
+  TableHeader,
+  TableColumn,
+  TableBody,
+  TableRow,
+  TableCell,
+  Button,
+  Link,
+  Chip
+} from "@nextui-org/react";
+import { IoPencil } from "react-icons/io5";
 
-const DesignationTable = ({designations}) => {
+const DesignationTable = ({ designations }) => {
   return (
-    <Table.Root variant="surface">
-        <Table.Header>
-          <Table.Row>
-            <Table.Cell>Name</Table.Cell>
-            <Table.Cell>Description</Table.Cell>
-            <Table.Cell>Status</Table.Cell>
-            <Table.Cell>Actions</Table.Cell>
-          </Table.Row>
-        </Table.Header>
-        <Table.Body>
-          {designations.length === 0 ? (
-            <Spinner size="3" />
-          ) : (
-            designations.map((designations) => (
-              <Table.Row key={designations.id}>
-                <Table.Cell>{designations.name}</Table.Cell>
-                <Table.Cell>{designations.description}</Table.Cell>
-                <Table.Cell>
-                  {designations.status === "active" ? (
-                    <Badge color="green">Active</Badge>
-                  ) : (
-                    <Badge color="red">Inactive</Badge>
-                  )}
-                </Table.Cell>
-                <Table.Cell>
-                  <a href="/designations/edit/1">Edit</a>
-                </Table.Cell>
-              </Table.Row>
-            ))
-          )}
-        </Table.Body>
-      </Table.Root>
-  )
-}
+    <Table>
+      <TableHeader>
+      <TableColumn>Name</TableColumn>
+            <TableColumn>Description</TableColumn>
+            <TableColumn>Status</TableColumn>
+           <TableColumn>Actions</TableColumn>
+      </TableHeader>
+      <TableBody>
+        {designations?.length > 0 &&
+          designations?.map((dsg) => (
+            <TableRow key={dsg.id}>
+              <TableCell>{dsg.name}</TableCell>
+              <TableCell>{dsg.description}</TableCell>
+              <TableCell>
+                {dsg.status === "active" ? (
+                  <Chip color="success">Active</Chip>
+                ) : (
+                  <Chip color="danger">Inactive</Chip>
+                )}
+              </TableCell>
+              <TableCell>
+                   <Button size='sm' as={Link} href={`/designations/edit/${dsg.id}`} isIconOnly><IoPencil /></Button>
+                </TableCell>
+            </TableRow>
+          ))}
+      </TableBody>
+    </Table>
+  );
+};
 
-export default DesignationTable
+export default DesignationTable;

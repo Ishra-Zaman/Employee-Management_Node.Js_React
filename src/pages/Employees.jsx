@@ -1,7 +1,6 @@
-import { Box, Heading, Button } from "@radix-ui/themes";
 import React, { useState, useEffect } from "react";
-import {Link} from 'react-router-dom'
-import {PlusIcon} from '@radix-ui/react-icons'
+import { Button, Link } from "@nextui-org/react";
+import { CiSquarePlus } from "react-icons/ci";
 import axios from "axios";
 
 import EmployeeTable from "../components/employee/EmployeeTable";
@@ -20,13 +19,13 @@ const Employees = () => {
   }, []);
 
   return (
-    <Box width="100%">
-      <Heading size="6" mb="6" mt="4" align="center" color="violet">
+    <div className="w-full">
+      <h2 className="text-2xl text-center text-primary mb-6 mt-4">
         Employees
-      </Heading>
-      <Link to="/employees/add"><Button variant="solid" mb="3"><PlusIcon /> Add Employee</Button></Link>
+      </h2>
+      <Button href="/employees/add" as={Link} variant="solid" startContent={<CiSquarePlus />}> Add Employee</Button>
       <EmployeeTable employees={employees} />
-    </Box>
+    </div>
   );
 };
 

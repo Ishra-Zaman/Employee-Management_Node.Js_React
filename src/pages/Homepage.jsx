@@ -1,24 +1,24 @@
 import React from "react";
-import { Flex, Heading, Link, Text } from "@radix-ui/themes";
+import { Link } from "@nextui-org/react";
 
 const Homepage = () => {
   return (
-    <Flex align="center" direction="column" justify="center" height="100vh">
-      <Heading mb="2" size="8" className="!text-white">
+    <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-r from-cyan-500 to-blue-500">
+      <h1 className="mb-2 text-4xl text-white">
         Welcome to Employee Management
-      </Heading>
-      <Text mb="4" size="4">
+      </h1>
+      <p className="mb-4 text-2xl text-secondary">
         Please navigate through our options
-      </Text>
-      <Flex direction="row" gap="4">
-        <Link href="/designations" size="3" color="violet">
+      </p>
+      <div className="flex gap-4">
+        <Link href="/designations" className="text-success text-lg font-semibold" color="foreground" isBlock showAnchorIcon>
           Designations
         </Link>
-        <Link href="/employees" size="3" color="cyan">
+        <Link href="/employees" className="text-secondary text-lg font-semibold" color="foreground" isBlock showAnchorIcon>
           Employees
         </Link>
-      </Flex>
-    </Flex>
+      </div>
+    </div>
   );
 };
 

@@ -1,22 +1,16 @@
-import { Box, Heading, TextField } from '@radix-ui/themes'
 import React from 'react'
-import * as Form from '@radix-ui/react-form'
+import { Input } from '@nextui-org/react'
 
 const AddEmployee = () => {
   return (
-    <Box width="100%">
-      <Heading size="6" mb="6" mt="4" align="center" color="violet">
+    <div className='w-full'>
+      <h2 className='text-2xl mb-6 mt-4 text-center text-primary'>
         Add Employee
-      </Heading>
-      <Form.Root>
-        <Form.Field>
-          <Form.Label htmlFor="first_name">First Name</Form.Label>
-          <Form.Control asChild>
-            <TextField.Root variant="primary" type='email' required />
-            </Form.Control>
-        </Form.Field>
-      </Form.Root>
-    </Box>
+      </h2>
+      <form>
+        <Input type='text' label="First Name" placeholder='Enter your first name' isRequired />
+      </form>
+    </div>
   )
 }
 
