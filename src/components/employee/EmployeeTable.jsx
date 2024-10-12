@@ -1,43 +1,73 @@
-import React from 'react';
+import React from "react";
+import {
+  Table,
+  TableHeader,
+  TableColumn,
+  TableBody,
+  TableRow,
+  TableCell,
+  Button,
+  Link,
+} from "@nextui-org/react";
+import { IoPencil, IoTrashBin } from "react-icons/io5";
+import axios from "axios";
 
-const EmployeeTable = ({ employees }) => {
+const EmployeeTable = ({ employees, onEmployeeDelete }) => {
+  const handleDelete = async (id) => {
+    const confirmDelete = window.confirm("Are you sure you want to delete this employee?");
+    if (confirmDelete) {
+      try {
+        await axios.delete(`${process.env.REACT_APP_API_URL}/employees/${id}`);
+        onEmployeeDelete(id); // Call the prop function to update the state in parent
+      } catch (error) {
+        console.error("Error deleting employee:", error);
+        alert("Failed to delete employee.");
+      }
+    }
+  };
+
   return (
-    <div></div>
-    // <Table.Root variant="surface">
-    //   <Table.Header>
-    //     <Table.Row>
-    //       <Table.Cell>First Name</Table.Cell>
-    //       <Table.Cell>Last Name</Table.Cell>
-    //       <Table.Cell>Address</Table.Cell>
-    //       <Table.Cell>Phone Number</Table.Cell>
-    //       <Table.Cell>Email Address</Table.Cell>
-    //       <Table.Cell>Salary</Table.Cell>
-    //       <Table.Cell>Designation</Table.Cell>
-    //       <Table.Cell>Actions</Table.Cell>
-    //     </Table.Row>
-    //   </Table.Header>
-    //   <Table.Body>
-    //     {employees.length === 0 ? (
-    //           <Spinner size="3" />
-    //     ) : (
-    //       employees.map((employees) => (
-    //         <Table.Row key={employees.id}>
-    //           <Table.Cell>{employees.first_name}</Table.Cell>
-    //           <Table.Cell>{employees.last_name}</Table.Cell>
-    //           <Table.Cell>{employees.address}</Table.Cell>
-    //           <Table.Cell>{employees.phone}</Table.Cell>
-    //           <Table.Cell>{employees.email_address}</Table.Cell>
-    //           <Table.Cell>{employees.salary}</Table.Cell>
-    //           <Table.Cell>{employees.designation.name}</Table.Cell>
-    //           <Table.Cell>
-    //           <a href="/employees/edit/1">Edit</a>
-    //           </Table.Cell>
-    //         </Table.Row>
-    //       ))
-    //     )}
-    //   </Table.Body>
-    // </Table.Root>
-  )
-}
+    <Table>
+      <TableHeader>
+        <TableColumn>First Name</TableColumn>
+        <TableColumn>Last Name</TableColumn>
+        <TableColumn>Address</TableColumn>
+        <TableColumn>Phone Number</TableColumn>
+        <TableColumn>Email Address</TableColumn>
+        <TableColumn>Salary</TableColumn>
+        <TableColumn>Designation</TableColumn>
+        <TableColumn>Actions</TableColumn>
+      </TableHeader>
+      <TableBody>
+        {employees?.length > 0 &&
+          employees.map((emp) => (
+            <TableRow key={emp.id}>
+              <TableCell>{emp.first_name}</TableCell>
+              <TableCell>{emp.last_name}</TableCell>
+              <TableCell>{emp.address}</TableCell>
+              <TableCell>{emp.phone}</TableCell>
+              <TableCell>{emp.email_address}</TableCell>
+              <TableCell>{emp.salary}</TableCell>
+              <TableCell>{emp.designation.name}</TableCell>
+              <TableCell>
+                <Button
+                  size="sm"
+                  as={Link}
+                  href={`/employees/edit/${emp.id}`}
+                  isIconOnly
+                  color="primary"
+                >
+                  <IoPencil />
+                </Button>
+                <Button size="sm" isIconOnly color="danger" onClick={() => handleDelete(emp.id)}>
+                  <IoTrashBin />
+                </Button>
+              </TableCell>
+            </TableRow>
+          ))}
+      </TableBody>
+    </Table>
+  );
+};
 
 export default EmployeeTable;
