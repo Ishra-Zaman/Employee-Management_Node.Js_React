@@ -1,14 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import {
-  Card,
-  CardBody,
-  Input,
-  Button,
-  Select,
-  SelectItem,
-  Link,
-} from "@nextui-org/react";
+import { Card, CardBody, Input, Button, Select, SelectItem, Link } from "@nextui-org/react";
 import axios from "axios";
 
 const EditDesignation = () => {
@@ -18,7 +10,7 @@ const EditDesignation = () => {
   const [designationData, setDesignationData] = useState({
     name: "",
     description: "",
-    status: "active", // Default value to avoid undefined status
+    status: "active", 
   });
 
   const statusOptions = [
@@ -30,10 +22,10 @@ const EditDesignation = () => {
     axios
       .get(`${process.env.REACT_APP_API_URL}/designations/${designationId}`)
       .then((response) => {
-        console.log("Fetched Designation Data:", response.data); // Check if status is fetched correctly
+        console.log("Fetched Designation Data:", response.data); 
         setDesignationData({
           ...response.data,
-          status: response.data.status || "active", // Ensure status is not undefined
+          status: response.data.status || "active", 
         });
       })
       .catch((error) =>
@@ -49,11 +41,10 @@ const EditDesignation = () => {
     });
   };
 
-  // Updated status change handler for Next UI Select component
   const handleStatusChange = (selectedKey) => {
     setDesignationData({
       ...designationData,
-      status: selectedKey, // Update status with the selected key
+      status: selectedKey, 
     });
   };
 
@@ -102,8 +93,8 @@ const EditDesignation = () => {
               <Select
                 label="Status"
                 name="status"
-                selectedKeys={[designationData.status]} // Pass the status as an array
-                onSelectionChange={handleStatusChange} // Use Next UI's `onSelectionChange`
+                selectedKeys={new Set([designationData.status])} 
+                onSelectionChange={(selected) => handleStatusChange(selected.anchorKey)} 
                 className="w-full"
                 required
               >

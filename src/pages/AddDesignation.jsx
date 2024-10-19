@@ -10,36 +10,32 @@ import {
 } from "@nextui-org/react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as Yup from "yup";
 
 const AddDesignation = () => {
-  const [designationData, setDesignationData] = useState({
-    name: "",
-    description: "",
-    status: "active",
+  const navigate = useNavigate(); 
+
+  const validationSchema = Yup.object({
+    name: Yup.string().required("Designation Name is required"),
+    description: Yup.string().nullable(),
+    status: Yup.string().required("Status is required"),
   });
 
-  const statusOptions = [
-    { value: "active", label: "Active" },
-    { value: "inactive", label: "Inactive" },
-  ];
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(validationSchema),
+  });
 
-  const navigate = useNavigate(); // Hook for navigation
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setDesignationData({
-      ...designationData,
-      [name]: value,
-    });
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Send POST request to add new designation
+  const onSubmit = (data) => {
     axios
-      .post(`${process.env.REACT_APP_API_URL}/designations`, designationData)
+      .post(`${process.env.REACT_APP_API_URL}/designations`, data)
       .then(() => {
-        navigate("/designations"); // Redirect to designations page after success
+        navigate("/designations");
       })
       .catch((error) => console.error("Error adding designation:", error));
   };
@@ -52,24 +48,22 @@ const AddDesignation = () => {
 
       <Card>
         <CardBody>
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit(onSubmit)}>
             <div className="mb-5">
               <Input
                 label="Designation Name"
-                name="name" 
-                value={designationData.name}
-                onChange={handleInputChange}
+                {...register("name")}
                 placeholder="Enter the name of the designation"
-                required
               />
+              {errors.name && (
+                <div className="text-red-500">{errors.name.message}</div>
+              )}
             </div>
 
             <div className="mb-5">
               <Input
                 label="Description"
-                name="description"
-                value={designationData.description} 
-                onChange={handleInputChange}
+                {...register("description")}
                 placeholder="Enter the description of the designation"
                 multiline
                 rows={1}
@@ -79,18 +73,26 @@ const AddDesignation = () => {
             <div className="mb-5 w-full">
               <Select
                 label="Status"
-                name="status" 
-                value={designationData.status} 
-                onChange={handleInputChange}
-                 placeholder="Select the status of the designation"
+                {...register("status")}
+                placeholder="Select the status of the designation"
                 className="w-full"
+                status={errors.status ? "error" : "default"}
               >
-                {statusOptions.map((status) => (
+                <SelectItem value="" disabled>
+                  Select Status
+                </SelectItem>
+                {[
+                  { value: "active", label: "Active" },
+                  { value: "inactive", label: "Inactive" },
+                ].map((status) => (
                   <SelectItem key={status.value} value={status.value}>
                     {status.label}
                   </SelectItem>
                 ))}
               </Select>
+              {errors.status && (
+                <span className="text-red-500">{errors.status.message}</span>
+              )}
             </div>
 
             <div className="mb-5">

@@ -8,26 +8,18 @@ import {
   SelectItem,
   Link,
 } from "@nextui-org/react";
-import axios from "axios"; // Import axios for API requests
-import { useNavigate } from "react-router-dom"; // Import useNavigate for navigation
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as Yup from "yup";
 
 const AddEmployee = () => {
-  const [employeeData, setEmployeeData] = useState({
-    first_name: "",
-    last_name: "",
-    address: "",
-    email_address: "",
-    phone: "",
-    salary: "",
-    designation_id: "",
-  });
+  const [designations, setDesignations] = useState([]);
 
-  const [designations, setDesignations] = useState([]); // State to hold designations
-
-  const navigate = useNavigate(); // Hook for navigation
+  const navigate = useNavigate();
 
   useEffect(() => {
-    // Fetch the designations from the API to populate the select
     const fetchDesignations = async () => {
       try {
         const response = await axios.get(
@@ -40,23 +32,41 @@ const AddEmployee = () => {
     };
 
     fetchDesignations();
-  }, []); // Run once when the component mounts
+  }, []);
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setEmployeeData({
-      ...employeeData,
-      [name]: value,
-    });
-  };
+  const validationSchema = Yup.object({
+    first_name: Yup.string()
+      .required("First Name is required")
+      .matches(/^[A-Za-z]+$/, "First Name must only contain letters"),
+    last_name: Yup.string()
+      .required("Last Name is required")
+      .matches(/^[A-Za-z]+$/, "Last Name must only contain letters"),
+    address: Yup.string().nullable(),
+    email_address: Yup.string()
+      .email("Email must be valid")
+      .required("Email address is required"),
+    phone: Yup.string()
+      .nullable()
+      .matches(/^[0-9]*$/, "Phone number must only contain numbers"),
+    salary: Yup.string()
+      .required("Salary is required")
+      .matches(/^(0|[1-9]\d*)(\.\d+)?$/, "Salary must only contain numbers"),
+    designation_id: Yup.string().required("Designation is required"),
+  });
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Send POST request to add new employee
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(validationSchema),
+  });
+
+  const onSubmit = (data) => {
     axios
-      .post(`${process.env.REACT_APP_API_URL}/employees`, employeeData)
+      .post(`${process.env.REACT_APP_API_URL}/employees`, data)
       .then(() => {
-        navigate("/employees"); // Redirect to employees page after success
+        navigate("/employees");
       })
       .catch((error) => console.error("Error adding employee:", error));
   };
@@ -69,82 +79,82 @@ const AddEmployee = () => {
 
       <Card>
         <CardBody>
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit(onSubmit)}>
             <div className="mb-5">
               <Input
                 label="First Name"
-                name="first_name" 
-                value={employeeData.first_name}
-                onChange={handleInputChange}
+                {...register("first_name")}
                 placeholder="Enter the first name of the employee"
-                required
               />
+              {errors.first_name && (
+                <div className="text-red-500">{errors.first_name.message}</div>
+              )}
             </div>
 
             <div className="mb-5">
               <Input
                 label="Last Name"
-                name="last_name" // Add name attribute
-                value={employeeData.last_name} // Controlled input
-                onChange={handleInputChange}
+                {...register("last_name")}
                 placeholder="Enter the last name of the employee"
-                required
               />
+              {errors.last_name && (
+                <div className="text-red-500">{errors.last_name.message}</div>
+              )}
             </div>
 
             <div className="mb-5">
               <Input
                 label="Address"
-                name="address" // Add name attribute
-                value={employeeData.address} // Controlled input
-                onChange={handleInputChange}
+                {...register("address")}
                 placeholder="Enter the address of the employee"
               />
+              {errors.address && (
+                <div className="text-red-500">{errors.address.message}</div>
+              )}
             </div>
 
             <div className="mb-5">
               <Input
                 label="Email Address"
-                name="email_address" // Add name attribute
-                value={employeeData.email_address} // Controlled input
-                onChange={handleInputChange}
+                {...register("email_address")}
                 placeholder="Enter the email address of the employee"
                 type="email"
-                required
               />
+              {errors.email_address && (
+                <div className="text-red-500">
+                  {errors.email_address.message}
+                </div>
+              )}
             </div>
 
             <div className="mb-5">
               <Input
                 label="Phone Number"
-                name="phone" // Add name attribute
-                value={employeeData.phone} // Controlled input
-                onChange={handleInputChange}
+                {...register("phone")}
                 placeholder="Enter the phone number of the employee"
-                required
               />
+              {errors.phone && (
+                <div className="text-red-500">{errors.phone.message}</div>
+              )}
             </div>
 
             <div className="mb-5">
               <Input
                 label="Salary"
-                name="salary" // Add name attribute
-                value={employeeData.salary} // Controlled input
-                onChange={handleInputChange}
+                {...register("salary")}
                 placeholder="Enter the salary of the employee"
-                required
               />
+              {errors.salary && (
+                <div className="text-red-500">{errors.salary.message}</div>
+              )}
             </div>
 
             <div className="mb-5 w-full">
               <Select
-                label="Designations"
-                name="designation_id" // Add name attribute
-                value={employeeData.designation_id} // Controlled input
-                onChange={handleInputChange} // Handle change
+                label="Designation"
+                {...register("designation_id")}
                 placeholder="Select the designation of the employee"
                 className="w-full"
-                required
               >
                 {designations.map((designation) => (
                   <SelectItem key={designation.id} value={designation.id}>
@@ -152,6 +162,11 @@ const AddEmployee = () => {
                   </SelectItem>
                 ))}
               </Select>
+              {errors.designation_id && (
+                <div className="text-red-500">
+                  {errors.designation_id.message}
+                </div>
+              )}
             </div>
 
             <div className="mb-5">

@@ -19,7 +19,6 @@ const EditEmployee = () => {
 
   const [designations, setDesignations] = useState([]);
 
-  // Fetch employee and designation data
   useEffect(() => {
     axios.get(`${process.env.REACT_APP_API_URL}/employees/${employeeId}`)
       .then(response => {
@@ -32,7 +31,6 @@ const EditEmployee = () => {
       .catch(error => console.error("Error fetching designations:", error));
   }, [employeeId]);
 
-  // Handle changes for all form inputs
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setEmployeeData({
@@ -41,15 +39,13 @@ const EditEmployee = () => {
     });
   };
 
-  // Handle designation change from the Select component
   const handleDesignationChange = (selectedKey) => {
     setEmployeeData({
       ...employeeData,
-      designation_id: selectedKey  // Update with the selected designation ID
+      designation_id: selectedKey 
     });
   };
 
-  // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
     axios.put(`${process.env.REACT_APP_API_URL}/employees/${employeeId}`, employeeData)
@@ -66,7 +62,6 @@ const EditEmployee = () => {
       <Card>
         <CardBody>
           <form onSubmit={handleSubmit}>
-            {/* Employee form fields */}
             <div className="mb-5">
               <Input
                 label="First Name"
@@ -109,7 +104,6 @@ const EditEmployee = () => {
                 name="phone"
                 value={employeeData.phone}
                 onChange={handleInputChange}
-                required
               />
             </div>
             <div className="mb-5">
@@ -122,13 +116,12 @@ const EditEmployee = () => {
               />
             </div>
 
-            {/* Designation Select component */}
             <div className="mb-5 w-full">
               <Select
                 label="Designation"
                 name="designation_id"
-                selectedKeys={[employeeData.designation_id]}  // Pass designation ID as an array
-                onSelectionChange={handleDesignationChange}
+                selectedKeys={new Set([employeeData.designation_id])}  
+                onSelectionChange={(selected) => handleDesignationChange(selected.anchorKey)}  
                 required
                 className="w-full"
               >
